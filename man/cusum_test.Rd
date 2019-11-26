@@ -8,13 +8,13 @@ cusum_test(x, trend = c("none", "linear"), tau = 0.2, type = c("LKT",
   "SK"), m = 0, simu = 0, M = 10000)
 }
 \arguments{
-\item{x}{the univariate numeric time series to be investigated.}
+\item{x}{the univariate numeric vector to be investigated. Missing values are not allowed.}
 
-\item{trend}{whether the time series exhibits a trend, \code{none} implies no trend and \code{linear} implies a linear trend.}
+\item{trend}{whether the time series exhibits a trend, \code{"none"} implies no trend and \code{"linear"} implies a linear trend.}
 
-\item{tau}{the function tests in the interval \code{[T*tau,T*(1-tau)]} for a break in persistence with T being the length of the time series. It must hold that \code{0<tau<0.5}, default is \code{tau=0.2} as commonly used in the literature.}
+\item{tau}{the function tests in the interval \code{[T*tau,T*(1-tau)]} for a break in persistence with T being the length of the time series. It must hold that \code{0<tau<0.5}, default is \code{tau=0.2} as commonly used in the literature. Note that if \code{T*tau<=1+as.numeric(trend=="linear") + (m>3)*(m-3)} the test statistic cannot be calculated.}
 
-\item{type}{which type of cusum test should be performed, \code{LKT} for the cusum test by Leybourne, Taylor, and Kim (2006) and \code{SK} for the extension by Sibbertsen and Kruse (2009). See details.}
+\item{type}{which type of cusum test should be performed, \code{"LKT"} for the cusum test by Leybourne, Taylor, and Kim (2006) and \code{"SK"} for the extension by Sibbertsen and Kruse (2009). See details.}
 
 \item{m}{Number of covariances used for the estimation of the long run variance. Default is \code{m=0}.}
 
@@ -31,7 +31,7 @@ Under the null hypothesis the time series is nonstationary throughout and under 
 }
 \details{
 Leybourne, Taylor, and Kim (2006) introduced a cusum-type test that is able to identify when time series
-exhibit changes in persistence.. Under the null
+exhibit changes in persistence. Under the null
 hypothesis, the series is throughout I(1), i.e. nonstationary. Under the alternative the series exhibits a
 break either from I(0) to I(1) or vice versa. Sibbertsen and Kruse (2009) extended the test such that under the null hypothesis
 the time series is I(d) throughout, with d>1/2 and under the alternative a change from I(d1) to I(d2), where d1<1/2 and 1/2<d2<3/2, or vice versa has occured.
@@ -41,17 +41,22 @@ To determine the order of integration (the memory parameter d) the semiparametri
 
 The critical values of the tests vary with sample size and d. If \code{simu=0}, the critical values provided
 are based on linear interpolation of the critical values simulated by Leybourne, Taylor, and Kim (2006) respectively the response curves by Sibbertsen and Kruse (2009).
-These are based on \code{tau=0.2}.
-If \code{simu=1}, the critical values are simulated based on the given setup using M replications. Caution, for large M this might take a while,
-small M, however, make the results unreliable.
+These are, however, only valid for \code{tau=0.2} and \code{m=0}. 
+In case that non-default values are chosen for \code{tau} or \code{m}, it is recommended to set \code{simu=1} which means that critical values are simulated based on the given data using M replications. 
+Caution, for a time series of length \code{T=100} and \code{M=10,000} replications this takes approximately thirty minutes with increasing duration for higher T or M.  
+It should be noted, however, that M smaller than 10,000 make the results unreliable.
 }
 \examples{
-library(fracdiff)
-series<- c(rnorm(200),cumsum(rnorm(200)))
-cusum_test(series,trend="none",type="SK")
+set.seed(410)
+
+# generate dummy-data
+series <- c(rnorm(200), cumsum(rnorm(200)))
+
+# test for a break in persistence
+cusum_test(series, trend="none", type="SK")
 }
 \references{
-Leybourne, S., Kim, T., and Taylor, R. (2006): Cusum of squares-based tests for a change in persistence. Journal of Time Series Analysis, 28, pp. 408-433.
+Leybourne, S., Kim, T., and Taylor, R. (2007): Cusum of squares-based tests for a change in persistence. Journal of Time Series Analysis, 28, pp. 408-433.
 
 Sibbertsen, P. and Kruse, R. (2009): Testing for a break in persistence under long-range dependencies. Journal of Time Series Analysis, 30, pp. 263-285.
 }

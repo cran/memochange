@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Kai Wenger" />
+
+<meta name="date" content="2019-11-26" />
+
+<title>memochange-Tutorial: Change in Mean</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">memochange-Tutorial: Change in Mean</h1>
+<h4 class="author">Kai Wenger</h4>
+<h4 class="date">2019-11-26</h4>
+
+
+
+<p>The <code>memochange</code> package can be used for two things: Checking for a break in persistence and checking for a change in mean. This vignette presents the functions related to a change in mean. This includes the functions <code>CUSUMfixed</code>, <code>CUSUMLM</code>, <code>CUSUM_simple</code>, <code>fixbsupw</code>, <code>snsupwald</code>, <code>snwilcoxon</code>, and <code>wilcoxonLM</code>. Before considering the usage of these functions, a brief literature review elaborates on their connection.</p>
+<div id="literature-review" class="section level2">
+<h2>Literature Review</h2>
+<p>In standard time series models it is usually assumed that the series have a constant mean over time. If this assumption is invalidated, inference and forecasts based on such models are misleading. Therefore, testing for a change in mean is of major importance.</p>
+<p>A typical example of a time series that could be subject to a change in mean is the series of average yearly temperatures in New Haven. It is visualized in the following graph.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>utils<span class="op">::</span><span class="kw">data</span>(nhtemp)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>graphics<span class="op">::</span><span class="kw">plot</span>(nhtemp)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>Three standard procedures to test for a change in mean at an unknown point in time are CUSUM tests originally proposed by <span class="citation">Brown, Durbin, and Evans (1975)</span>, Wilcoxon-type rank tests (e.g. <span class="citation">Bauer (1972)</span>), and sup-Wald tests by <span class="citation">Andrews (1993)</span>. Applying the standard CUSUM test, for example, we observe for the above temperature series that the corresponding p-value of the test is smaller than any resonable significance level.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>strucchange<span class="op">::</span><span class="kw">sctest</span>(strucchange<span class="op">::</span><span class="kw">efp</span>(nhtemp <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;OLS-CUSUM&quot;</span>))</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">#&gt; </span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt;  OLS-based CUSUM test</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt; </span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt; data:  strucchange::efp(nhtemp ~ 1, type = &quot;OLS-CUSUM&quot;)</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt; S0 = 2.0728, p-value = 0.0003709</span></span></code></pre></div>
+<p>Therefore, it rejects the null hypothesis of a constant mean over time and we conclude that there is a change in mean.</p>
+<p>However, all these standard tests suffer from the issue that they cannot be applied under long memory. In a persistent long-memory time series far distant observations are significantly correlated. The degree of persistence is given by the long-memory parameter <span class="math inline">\(d \in [0,0.5)\)</span>. Higher values of <span class="math inline">\(d\)</span> indicate higher persistence of the series. The special case <span class="math inline">\(d=0\)</span> is called short memory where far distant observations are not significantly correlated anymore. The difference between a short-memory and a long-memory time series can be seen easily in the autocorrelation function (acf) of a series, which gives the correlation between observations separated by various time lags.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>T            &lt;-<span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>series_short &lt;-<span class="st"> </span>fracdiff<span class="op">::</span><span class="kw">fracdiff.sim</span>(<span class="dt">n=</span>T,<span class="dt">d=</span><span class="dv">0</span>)<span class="op">$</span>series</span>
+<span id="cb3-3"><a href="#cb3-3"></a>series_long  &lt;-<span class="st"> </span>fracdiff<span class="op">::</span><span class="kw">fracdiff.sim</span>(<span class="dt">n=</span>T,<span class="dt">d=</span><span class="fl">0.45</span>)<span class="op">$</span>series</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>graphics<span class="op">::</span><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb3-6"><a href="#cb3-6"></a>stats<span class="op">::</span><span class="kw">acf</span>(series_short,<span class="dt">main=</span><span class="st">&quot;short memory&quot;</span>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a>stats<span class="op">::</span><span class="kw">acf</span>(series_long,<span class="dt">main=</span><span class="st">&quot;long memory&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>We observe that the acf of the short-memory time series dies out quickly, while the autocorrelations in the long-memory time series are even at a very large lag (i.e. for far distant observations) high.</p>
+<p>The above mentioned standard tests for a change in mean are developed under short memory. <span class="citation">Wright (1998)</span> and <span class="citation">Krämer and Sibbertsen (2002)</span>, among others, found that they asymptotically reject the null hypothesis of a constant mean with probability one under long memory. This can be seen in a simple Monte Carlo simulation for the standard CUSUM test. We simulate <span class="math inline">\(N\)</span> times a short-memory (<span class="math inline">\(d=0\)</span>) and a long-memory (<span class="math inline">\(d=0.45\)</span>) time series of length <span class="math inline">\(T\)</span> without any change in mean, apply the test, and investigate how often the null hypothesis is rejected with a nominal significance level of <span class="math inline">\(5\%\)</span>. Therefore, since we are under the null hypothesis we expect on average <span class="math inline">\(5\%\)</span> rejections.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">set.seed</span>(<span class="dv">410</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>T                  &lt;-<span class="st"> </span><span class="dv">500</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>N                  &lt;-<span class="st"> </span><span class="dv">500</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>results_short      &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;numeric&quot;</span>,N)</span>
+<span id="cb4-5"><a href="#cb4-5"></a>results_long       &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;numeric&quot;</span>,N)</span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N)</span>
+<span id="cb4-7"><a href="#cb4-7"></a>{</span>
+<span id="cb4-8"><a href="#cb4-8"></a>  series_short     &lt;-<span class="st"> </span>fracdiff<span class="op">::</span><span class="kw">fracdiff.sim</span>(<span class="dt">n=</span>T,<span class="dt">d=</span><span class="dv">0</span>)<span class="op">$</span>series</span>
+<span id="cb4-9"><a href="#cb4-9"></a>  series_long      &lt;-<span class="st"> </span>fracdiff<span class="op">::</span><span class="kw">fracdiff.sim</span>(<span class="dt">n=</span>T,<span class="dt">d=</span><span class="fl">0.45</span>)<span class="op">$</span>series</span>
+<span id="cb4-10"><a href="#cb4-10"></a>  results_short[i] &lt;-<span class="st"> </span>strucchange<span class="op">::</span><span class="kw">sctest</span>(strucchange<span class="op">::</span><span class="kw">efp</span>(series_short <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;OLS-CUSUM&quot;</span>))<span class="op">$</span>p.value<span class="op">&lt;</span><span class="fl">0.05</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>  results_long[i]  &lt;-<span class="st"> </span>strucchange<span class="op">::</span><span class="kw">sctest</span>(strucchange<span class="op">::</span><span class="kw">efp</span>(series_long <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;OLS-CUSUM&quot;</span>))<span class="op">$</span>p.value<span class="op">&lt;</span><span class="fl">0.05</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a>}</span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="kw">mean</span>(results_short)</span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; [1] 0.056</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="kw">mean</span>(results_long)</span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; [1] 0.992</span></span></code></pre></div>
+<p>Under short memory the test roghly holds its significance level of <span class="math inline">\(5\%\)</span>. However, under long memory the standard CUSUM test nearly always rejects. It cannot be used whenever <span class="math inline">\(d&gt;0\)</span>.</p>
+<p>Due to the problems described, a lot of researchers modified standard testing procedures for a change in mean to account for <span class="math inline">\(0&lt;d&lt;0.5\)</span> in recent years. A review is given in <span class="citation">Wenger, Leschinski, and Sibbertsen (2019)</span>. Tests based on the CUSUM testing principle are the CUSUM-LM test by <span class="citation">Horváth and Kokoszka (1997)</span> and <span class="citation">Wang (2008)</span>, the (simple) CUSUM test based on fractionally differenced data by <span class="citation">Wenger, Leschinski, and Sibbertsen (2018)</span>, and the CUSUM fixed bandwidth tests by <span class="citation">Wenger and Leschinski (2019)</span>. Wilcoxon type tests are the Wilcoxon-LM test by <span class="citation">Dehling, Rooch, and Taqqu (2013)</span> and the self-normalized Wilcoxon test by <span class="citation">Betken (2016)</span>. Modified sup-wald tests for a change in mean are the self-normalized sup-Wald test by <span class="citation">Shao (2011)</span> and the fixed-b sup-Wald test by <span class="citation">Iacone, Leybourne, and Taylor (2014)</span>.</p>
+<p>The tests can be further divided into more or less three groups depending on how the variance of the mean (long-run variance) that appears in the denominator of all test statistics is estimated. Without going into too many details, the first group (CUSUM-LM and Wilcoxon-LM tests) utilizes the MAC estimator by <span class="citation">Robinson (2005)</span> that consistently estimates the long-run variance under long memory. The second group (self-normalized Wilcoxon and self-normalized sup-Wald tests) applies a self-normalization approach (see <span class="citation">Shao (2010)</span>). A self-normalizer is not a consistent estimate of the long-run variance, but proportional to it, even when <span class="math inline">\(d&gt;0\)</span>. The third group (CUSUM fixed bandwidth and fixed-b sup-Wald tests) uses fixed bandwidth approach (see <span class="citation">Kiefer and Vogelsang (2005)</span> and <span class="citation">Hualde and Iacone (2017)</span>). It is a generalization of the self-normalization approach.</p>
+<p><span class="citation">Wenger, Leschinski, and Sibbertsen (2019)</span> observe via simulations that for fractionally integrated White noise time series (which is one class of long-memory time series) the CUSUM testing procedure seems to offer the highest rejection rates under the alternative of a mean shift (i.e. offers the highest power). However, the first group of tests that apply a consistent estimator of the long-run variance (e.g. the CUSUM-LM test) also rejects the null hypothesis of a constant mean too often in a time series that is not subject to a mean shift. In other words these tests are often size distorted. In contrast, the self-normalized and fixed bandwidth tests hold their size in most of the situations. For fractionally integrated heavy tailed time series (which is another class of long-memory time series) it is shown by <span class="citation">Dehling, Rooch, and Taqqu (2013)</span> and <span class="citation">Betken (2016)</span> that Wilcoxon type tests are superior to CUSUM tests.</p>
+<p>The simple CUSUM test by <span class="citation">Wenger, Leschinski, and Sibbertsen (2018)</span> is a little bit exceptional in the list of tests implemented. The reason is that instead of modifying the standard CUSUM test it modifies the data the standard test is applied on.</p>
+</div>
+<div id="usage" class="section level2">
+<h2>Usage</h2>
+<p>Two examples how to conduct the change-in-mean tests implemented in the <code>memochange</code> package are discussed in the following. The first example is an application of the tests to a real data set. The second example is a small Monte Carlo simulation where the performance of the tests is compared.</p>
+<p>First, we consider the log squared returns of the NASDAQ in the time around the global financial crisis (2006-2009). We download the daily stock price series from the FRED data base.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>nasdaq=data.table<span class="op">::</span><span class="kw">fread</span>(<span class="st">&quot;https://fred.stlouisfed.org/graph/fredgraph.csv?bgcolor=%23e1e9f0&amp;chart_type=line&amp;drp=0&amp;fo=open%20sans&amp;graph_bgcolor=%23ffffff&amp;height=450&amp;mode=fred&amp;recession_bars=on&amp;txtcolor=%23444444&amp;ts=12&amp;tts=12&amp;width=1168&amp;nt=0&amp;thu=0&amp;trc=0&amp;show_legend=yes&amp;show_axis_titles=yes&amp;show_tooltip=yes&amp;id=NASDAQCOM&amp;scale=left&amp;cosd=2006-01-01&amp;coed=2009-01-01&amp;line_color=%234572a7&amp;link_values=false&amp;line_style=solid&amp;mark_type=none&amp;mw=3&amp;lw=2&amp;ost=-99999&amp;oet=99999&amp;mma=0&amp;fml=a&amp;fq=Daily&amp;fam=avg&amp;fgst=lin&amp;fgsnd=2009-06-01&amp;line_index=1&amp;transformation=lin&amp;vintage_date=2019-11-04&amp;revision_date=2019-11-04&amp;nd=1971-02-05&quot;</span>)</span></code></pre></div>
+<p>Next calculate the log squared returns as a measure of volatility and plot the series.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>nasdaq              &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(nasdaq)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>nasdaq[nasdaq<span class="op">==</span><span class="st">&quot;.&quot;</span>] &lt;-<span class="st"> </span><span class="ot">NA</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>nasdaq              &lt;-<span class="st"> </span>stats<span class="op">::</span><span class="kw">na.omit</span>(nasdaq)</span>
+<span id="cb6-4"><a href="#cb6-4"></a>nasdaq<span class="op">$</span>NASDAQCOM    &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(nasdaq<span class="op">$</span>NASDAQCOM)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>nasdaq<span class="op">$</span>DATE=zoo<span class="op">::</span><span class="kw">as.Date</span>(nasdaq<span class="op">$</span>DATE)</span>
+<span id="cb6-6"><a href="#cb6-6"></a>nasdaq_xts=xts<span class="op">::</span><span class="kw">xts</span>(nasdaq[,<span class="op">-</span><span class="dv">1</span>],<span class="dt">order.by =</span> nasdaq<span class="op">$</span>DATE)</span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt; Registered S3 method overwritten by &#39;xts&#39;:</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt;   method     from</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;   as.zoo.xts zoo</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>nasdaq_xts          &lt;-<span class="st"> </span><span class="kw">log</span>(<span class="kw">diff</span>(nasdaq_xts)<span class="op">^</span><span class="dv">2</span>)[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb6-11"><a href="#cb6-11"></a>graphics<span class="op">::</span><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb6-12"><a href="#cb6-12"></a>zoo<span class="op">::</span><span class="kw">plot.zoo</span>(nasdaq_xts, <span class="dt">xlab=</span><span class="st">&quot;&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;Log squared returns&quot;</span>, <span class="dt">main=</span><span class="st">&quot;Log squared returns of the NASDAQ&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>A first visual impression is that the mean seems to increase in the second part of the sample. Furthermore, applying the local Whittle estimator (choosing the bandwidth as T^0.65, which is usual in literature) we observe that there is the potential that the time series possess high persistence (d&gt;0).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>T           &lt;-<span class="st"> </span><span class="kw">length</span>(nasdaq_xts)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>x           &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(nasdaq_xts)</span>
+<span id="cb7-3"><a href="#cb7-3"></a>d_est       &lt;-<span class="st"> </span>LongMemoryTS<span class="op">::</span><span class="kw">local.W</span>(x, <span class="dt">m=</span><span class="kw">floor</span>(<span class="dv">1</span><span class="op">+</span>T<span class="op">^</span><span class="fl">0.65</span>))<span class="op">$</span>d</span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="kw">round</span>(d_est,<span class="dv">3</span>)</span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co">#&gt; [1] 0.303</span></span></code></pre></div>
+<p>Therefore, as discussed above the standard testing procedures for a change in mean cannot be applied. Instead, one of the functions <code>CUSUM_simple</code>, <code>CUSUMfixed</code>, <code>CUSUMLM</code>, <code>fixbsupw</code>, <code>snsupwald</code>, <code>snwilcoxon</code>, and <code>wilcoxonLM</code> have to be used. The functionality of all tests is similar. They require a univariate numeric vector <code>x</code> as an input variable and yield a matrix of test statistic and critical values as an output variable.</p>
+<p>We apply the CUSUM fixed-m type A test of <span class="citation">Wenger and Leschinski (2019)</span> implemented in the function <code>CUSUMfixed</code> as an example. First, the arguments of the function are explained since it nests all arguments of the other implemented functions to test for a change in mean in a persistent time series.</p>
+<p>We have to insert the (estimated) long-memory parameter <code>d</code> as a first argument. The critical values of all tests depend on the long-memory parameter, except for the simple CUSUM test. However, also in the function <code>CUSUM_simple</code> the long-memory parameter has to be inserted since it is used to transform the time series the test is applied on.</p>
+<p>As a second argument the <code>type</code> of the CUSUM fixed bandwidth function has to be supplied. The user can choose between the CUSUM fixed-b and fixed-m tests of type-A or -B. According to <span class="citation">Wenger and Leschinski (2019)</span> the type-A tests outperform the type-B tests when the break is in the middle of the series while the revearse is true when the break break occurs at the beginning or the end of the series.</p>
+<p>In all fixed bandwidth functions (<code>CUSUMfixed</code>, <code>fixbsupw</code>) the bandwidth <code>bandw</code> has to be chosen. The bandwidth determines how many autocovariances for the fixed-<span class="math inline">\(b\)</span> tests and respectively how many periodogram ordinates for the fixed-<span class="math inline">\(M\)</span> tests are included in the estimators of the long-run variance. For the fixed-<span class="math inline">\(b\)</span> tests <span class="math inline">\(b\in(0,1]\)</span> and for the fixed-<span class="math inline">\(M\)</span> tests <span class="math inline">\(M\in[1,T]\)</span>. Since the critical values of all fixed bandwidth tests depend not only on <span class="math inline">\(d\)</span>, but also on the bandwidth, just for a couple of bandwidths critical values are given in the functions. <span class="citation">Wenger and Leschinski (2019)</span> and <span class="citation">Iacone, Leybourne, and Taylor (2014)</span> suggest to use <span class="math inline">\(b=0.1\)</span> and <span class="math inline">\(M=10\)</span>.</p>
+<p>The last argument of all tests is <code>tau</code>. It corresponds to the search area <span class="math inline">\([\tau,1-\tau]\)</span> with <span class="math inline">\(\tau \in (0,1)\)</span>, in which the test statistics are calculated. <span class="citation">Andrews (1993)</span> suggests using <span class="math inline">\(\tau_{1}=1-\tau_{2}=0.15\)</span>, which is the default value for <code>tau</code>. Note that critical values of the tests are also dependent on <code>tau</code> and just implemented for the default value.</p>
+<p>Executing the test we get the following result.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">library</span>(memochange)</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">CUSUMfixed</span>(x,<span class="dt">d=</span>d_est,<span class="dt">procedure=</span><span class="st">&quot;CUSUMfixedm_typeA&quot;</span>,<span class="dt">bandw=</span><span class="dv">10</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">#&gt;           90%           95%           99% Teststatistic </span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co">#&gt;         1.499         1.615         1.805         1.931</span></span></code></pre></div>
+<p>The output of all functions is a matrix consisting of the test statistic and critical values for the null hypothesis of a constant mean against the alternative of a change in mean at some unknown point in time. Here, the results suggest that a change in mean has occurred somewhere in the series since the test statistic exceeds the critical value at the one percent level.</p>
+<p>To correctly model and forecast the series, the exact location of the break is important. This can be estimated by the <code>breakpoints</code> function from the <code>strucchange</code> package.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>BP       &lt;-<span class="st"> </span>strucchange<span class="op">::</span><span class="kw">breakpoints</span>(x<span class="op">~</span><span class="dv">1</span>)<span class="op">$</span>breakpoints</span>
+<span id="cb9-2"><a href="#cb9-2"></a>BP_index &lt;-<span class="st"> </span>zoo<span class="op">::</span><span class="kw">index</span>(nasdaq_xts[BP])</span>
+<span id="cb9-3"><a href="#cb9-3"></a>BP_index</span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co">#&gt; [1] &quot;2007-07-23&quot;</span></span></code></pre></div>
+<p>The function indicates that there is a break in persistence in July, 2007, which roughly corresponds to the start of the world financial crisis. The following plot shows the time series and the estimated means before and after the break</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>T_index  &lt;-<span class="st"> </span>zoo<span class="op">::</span><span class="kw">index</span>(nasdaq_xts[T])</span>
+<span id="cb10-2"><a href="#cb10-2"></a>m1       &lt;-<span class="st"> </span><span class="kw">mean</span>(nasdaq_xts[<span class="dv">1</span><span class="op">:</span>BP])</span>
+<span id="cb10-3"><a href="#cb10-3"></a>m2       &lt;-<span class="st"> </span><span class="kw">mean</span>(nasdaq_xts[(BP<span class="op">+</span><span class="dv">1</span>)<span class="op">:</span>T])</span>
+<span id="cb10-4"><a href="#cb10-4"></a>zoo<span class="op">::</span><span class="kw">plot.zoo</span>(nasdaq_xts, <span class="dt">xlab=</span><span class="st">&quot;&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;Log squared returns&quot;</span>, <span class="dt">main=</span><span class="st">&quot;Log squared returns of the NASDAQ&quot;</span>)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>graphics<span class="op">::</span><span class="kw">segments</span>(<span class="dv">0</span>,m1,BP_index,m1,<span class="dt">col=</span><span class="dv">2</span>,<span class="dt">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a>graphics<span class="op">::</span><span class="kw">segments</span>((BP_index<span class="op">+</span><span class="dv">1</span>),m2,T_index,m2,<span class="dt">col=</span><span class="dv">2</span>,<span class="dt">lwd=</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGACAMAAABFpiBcAAAAzFBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZmYAZpAAZrY6AAA6ADo6AGY6OgA6Ojo6OmY6OpA6ZpA6ZrY6kLY6kNtmAABmADpmOgBmOjpmZgBmZjpmkGZmkLZmkNtmtttmtv+QOgCQZgCQZjqQkGaQkLaQtpCQttuQtv+Q27aQ29uQ2/+2ZgC2Zjq2ZpC2kDq2kGa225C227a229u22/+2/7a2///bkDrbkGbbtmbbtpDb25Db27bb29vb////AAD/tmb/25D/27b//7b//9v///9A9ZpAAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAbvklEQVR4nO2dDZ/jtnGHsZe7drdxk7i3dto6vmvSuu3p+paL1bjuVne7+P7fqXzDYEACIEgC4kD8Pz/7VhJBYDh4BJAURSkNgGDU3gEAEAOCAtFAUCAaCApEA0GBaCAoEA0EBaKBoEA0EBSIBoIC0UBQIBoICkQDQYFoICgQDQQFooGgQDQQFIgGggLRQFAgGggKRANBgWggKBANBAWigaBANBAUiAaCAtFAUCAaCApEA0GBaCAoEA0EBaKBoEA0dQt6VncfrtrgSb36Mbz05d8iC1N4+fig1NesstgGnpR61/x5flT33fOLouBe/uMrpe5+86l9fFYdwzO3nH756bfNsr/+/mlb3AWBoIuICvrl25i9KVxald6yymYEffPEBG2ed8Y22r0fpGyfDoIOz5xy+vnbYdnrT54GRABBFxEVND68psC2p69sRtBWNCNo81cNqpKTfRVk6IdROSOyUpsjL8YtCdpOV7/4rputXj42o8IHZsx/2zmvnUfvvu+W9QWaLmtHrZ/a4eRXH/pq/+lb9epTV83d109mrdc/2BqnZU59R/M6TaHm7792EY1CGcV9shoNlTkrsmhMkaYpI+hF3f3dEN2p2b5mDH7fCXzuX/z5WzUp17h7187uPz2YcVseNyToMFS0014/NNx9xXSicYKGjZGgFzvMnIeKusGm0WO0FquRl/EK2hcyo5itnA1ZNm6foLY0i0ZTkbck6Em9+Z+H3rPhbfT5oY+hb6op16aGlWu2aUifWSaQ2xG06Y4myWc1yHb/9HIiDdpOfNJ/Zss+jgVteusvn6hP1ZtP+n/bxZ+Gl/haQ9OTMn1tI0G7QuduL+9sfDKhTOL2TPFtBf1C1pIp8bdNoUHQtsFmGzrP2pHxuz9SjoaQzxTYUI72Xrsx97r7SsncjqDDsOFO3UPfNN36+o9OuaaPxlN8Mw22B7/3XQcPx8dv9dCx4xrDZUaCvrOFmyjunVAmcfsEfTdUxlsyJf6z0XXQ7NKuOqw/DPevf3jSjqDtQlaOyX71nflkbkZQO3rcfTCPaY+x77FuP89ZxmV6+X0/m95TtU0Hmpm5WWuYR9k+6KiMV9A+vv5vpxILZRJ36CCpW5G3RCWake9fekFPbTWk3J+/ot2BkaCsHAQtDsurPVZQ7+xumdHpS38+5e6ftbOsL9B1VCvO63/8+ZEJerGHv9Map2UcQc2+wkRQFsok7qigvCUq0TTzF10FpK/Zl3z5+Q8Pw7uNC8rLDU2fv37q5xOR3Iyg0RG04csfvuq6xTOCdjL1Rj0/uiPou1HtvhHUlEkU1IYyiXtuBKWWbIkzDfqGd3ZkHEr0IfcS8nL9QVJTeXNYj4OkIqTug/a8/MN4mdktazr0YnYTrVfsIMK3Dxoow+oMCEqhTOKOCcpbsiWGs5rsjGZX8u53/dkjK2h70mlUrj/NNAzpOM1UAjsevI0exTfP/+ap7YmmBF/WlW67bli970XypDuf+OVxvNbQ9KTM2ZxGMnX6BOWhdASO4k1l1mzWku5bNufh7/vjLz0dJp2xtZ/hWbnhxBXfMxDH7QgaPQ/6ke2+nYZVmmW0R/bWji1M0KEDx2sNTU/KXLrFrE7vCMpD4RvRxs0E7SvjK/JotGaDerPQnC7oHzgnbZ2POt1yZn+4XfidUENvSND+E5nfdQvaM5a//sT2QbvD2l/RJ0nmM6HPTQ/95r/oKP71D2dnpv3y+8a24fOnf39Qv/h+sg/Ky3QfX33idXqneBZKj42b71N3lTkrsmhahljasd0e5PTj8UvXRn+qgF8sMi5nLhb5e7kfJdUt6AynyMy1/YPzW+Ll468xgl6RU3fRmtnhChSBoDVwm4Kac4aRs88QtA5uU1D95bcPo0uGxkDQOrhRQcGtAEGBaCAoEA0EBaKBoEA0EBSIBoIC0UBQIBoICkQDQYFoICgQDQQFooGgQDQQFIgGggLRQFAgGggKRANBgWggKBANBAWigaBANBAUiAaCAtFAUCAaCApEA0GBaCAoEE1mQRUASewlaN7qwK0CQYFoICgQDQQFooGgQDSFBDW/bxK8OTEEBUmUEfRsfqvkEvrREggKkigi6Mt70vIc+H0XCHoQlPNn9foZC+r296To10wvgUkegh4EkYJiBAUGkYI2+6DDEIp90KMjU1D6edzgLwxC0IMgVNBrVwekUpmgyy9SAXVjBF3b4RhBQVFcQZd3OwQFRTFm+gWd16DQeVA7leM86LERKah+eT/3C8EQ9CDIFLQx9D5ndaBahAqqL+pddDkEPQhSBb1ydUAe1kwFQYE8eichqDDkbdheETVODma2j0hQZf9A0B2Qt2EJERUJ2gjafW4IQaWw34aFWp6JSM0XWUf/gXZY0LSGIWhmdhd0EkCyoLm7OCKogqB7cQRB0wpOpnhldkgngkYqhKCZ2WnDVHlBledRrCQXdHCUC6og6C5cd8MUe5AoqO9MTxlBNQQVSOENC9nWD1feAJIEne4QRupRwTL8ZQgqknwb5q0pVVDlKeOvdi9BzSn8SD0zi1YW3KW6nZsp0qLyPfbapjIKmjIST6Pxue0IqkOC8oHUBwQV2yJ3LEFQNRZUURnltYuMHAsa2CMdV8FrnQhq/7u+oM+Pb/U58oXNhdUVIpDl4mQVlBxLF1RN7JkXVLEdwllBFW/VLhuN9wsEVZ62Jq3OYwue3jx9frjXp5krPlOr2xDTfAOZdFlQTU5Bqe9igloPNCsaF5QPtksEVeaPEc0uWCWoPUMayUIiVLC9r017tWfopjYLq9sS03wDuwm6rWGmSoKgbK50BKVQIoL2piwTVK0VVJGcWpUV9NTIeRYrqKJ/6hOUWTYWlG0WLx4SlO2UKu6PT1CdJKjZU40KSoOsFVTPCaombY0TkoAteLp/fnzz9PwoaopX48drBA2WXiXoKke5oCoiqKMYCaNpl47t3BkH2FvntgV9flR3H2a/dJRc3bJloYKKPZgVNNRAJkFtHyUV9zxPF1QpJowKCuperzEVVLMGJnux1JZXUOUI2qsYEpTHaYrmFzQLhQU1CUsQ1FfJ6ohSBA21zp5bQc24aBYtF1QlCjro5wqqnLa4WRB0WSVWUCdhihVQvvVuR1A9FdSZTGnHlq2dRVBlmqVCEUHVuBoz83tyEX4xXnD2/vPLqssSU1xQ0zPKlolXsjqidEEVfzJZ6BdU2ZWtHQsEpcS4Ni0Q1FVMqKCnTWYmtJtXUDLGK6gaVeJvO2kwpAoXCaq8C8moBEEVE5R5ofMIyjyNC6o0xbCvoO0HSdvJLiiTbyoo6wGncFxQFVoQe72EoOY05UhQNRGUhs+JoHZpIUGpPD0MCaoVRVVI0PgtGRZWl7ZMeZ+4gir2wKT2hgQ1G0ZR5xNUbxJUs+AkCLr1BNN8u1sEVSxV2wRVzuOwoBPDIoIqGzV3ZFTCimA6k+lmY/MJSi0vEFSZGklQEyYNsKQwV9AjKI8zLKiNygqq3G4ZpSwFW3DurjYLq0taVlhQs3K6oHaUySSosiWU6TQmKB+3FglKlcQFtbpopWw9VlBFD11B2VKPoEonCEpR5RGU7q1Y4CheTf4dXp904rgIezvGBFW8ur4Kr6CUNPbUH6miNWhwWyuoUSckqJoIqhxBuVirBaUpN0lQ7pt2W40IqosKmofSgo7f5SZJvLq+ityCkkfjaM3jiaCmsUWC2i6fCOrTgq9i3w1BQdUGQemdY7fuqoKyH0HawNEEZQ07MTjTt/YJyp7FBSX5rNvc8g2CkosjQWm68gqqFwhqSk9ZLmjJo/ilgipewi+ocpM0WS9R0HHylLZdwyo6tKDKaXXoDtsb84JqD8sF3XghaLTdDILq6XvZ5IBnx7ZoEqm9gpqGcwqq+CZdW1DTCvPNSWBMUFbjKkGpFZOgIoIWP0iyGbOvewRVTpHcgrKu1LkEVemC/t8xSRZlS8Et1VHXsTnFvKSdLlckB58yVglK7+B5QRXFvU1Qu55f0L1F2YtkUbYU3FLdnKBOZ08FZdNYgqBGFjvFLBSUi6Z53WosqNkBNvOenexCUzy93eJTvKbKNW3FZIpXNJ8uneJp5uYx0xOTUb5mcIrXrAabJvOokineTn6OoNMkkqDckzyCspbccU6bVk38pvfMCz5BzZ+JoCaYBEGZpjkE5aGTSWsE1XkEpQK5BB3YeKgUCIYNZNQF6hqCGhvJm4WCjjNP22C61BWUgmGCKrZtSwSlthMEVW7oXFA7GBQSlBpmaaJU5he0xNeOaUud/ue95ROU9SUXlFY1uswJyt/ipv+5oKwrtglqHNggqLJrjNoOCqpsAZ5bWte2PRHUikYxs+VeQem9mCioaT9NlKSCBb52HBOU+jEmKIngCGrf8CsFJZ9yCkpdaOSzgirlbpQjqLLxpApqo84mqLLLtwpKW5BZ0AJfO2ZbapPIczQjKG32vKCmPzYKqlxBycklgmrelrLbPyMoRTcjqJO1xYIqW515Y9P2uC+zt5kIQUt87fiagloRvYKyCn2CUpM0PinWW4rVGxbUrOcKaiMJCqqUYjUUE5StnE9Q9qYqJag5ii9wbybaPN7/AUEV23CvoPSfI+ggHDczIuiQQkdQq+FqQUm2VEHNIyMoV3zU6062qGrKmrZv1cyC0nuJEjwrqKkvr6AJ9N8KuajIqaiNgtocJgpq+9YZHemlwoLaqFj4to9TBbVpcAU1+ZuEHhSUqpIjqN+wFSPoNx+6v5GDpE7QczvEBq8sSRWUtsojqB0KPILalxIFtS+wVceCKhvcvKBO3drGmywouWT6c62gVIpCpc1lYoQF1bQd2uTDvl/nBaV+uaqgkYOkVtBBzXNgTyDQ7rygZAp1uiuWpm0NCkpVrRGUis0K6r51RoK641tWQZ2GDifoSRHhy0JbQT8/dIKOxlm7dqAVr6CU8hyCUh7XCkpds0FQsmEPQZlKVxCUdet1R9AIGUZQMkRbXUaCUobICdsntBpVxQS1/00EZW+JkaDWkSRBjSdLBDVBRgXlDY8FNaNVgqAU3ERQ22SlgibQH+jf68iX6BMFNS/OCGo1pQHY9hQlZyook2E8MjFB2Zi7UlA30p0FZe4xR8zaSYJa3RIFte37BdVZBW38e/N0in/xo7sFXnMgHyqVVVAjQoqg5vm8oLZ39hPUbIwN2sYeFlTbsPIJqqsR9HL34dzeH3TTV5P2vvJQOLkE5W9zW5RqcwXV/L1GgrL12J+8glLbU5YL2n5prt2z3PZR594GCCckKB/9twnKxmq2+rBOSFDbjGBB26OfVtAi96iPTvHKTPF8qnam+L7m4BTfr0YdyPqJlZ6f4s0yitS8ZKTxTfG0RWYi1bwcSWF7rrigtEfBVmcWJQnKMy9FUDOCnjZ91rmToHZ04MVCgjpz3pyg1LFpgg6hVi+oqW6VoNO2p0Z4X40W7PdBz9tugCNWUPuccjsVlFysWlBdRFDe6j6C9meR7mbPhqZW57zMu13ZjQkISoqOBKXVpoJSB5pyyYJqM75OBFVcUApqqaC0pVYgK+iwRVcRlOqoVdAcbBbU6DUrqE1nsqCj3HoEZasxQe06M4JSEtYJaguOcjkrqM0yLXayX15Q9h4pJGjJW9/MCsrsTBDU6hER1GR6o6B6TlBeOdvcoKCUjpGgrFLxgvK2lV2Zb5kTk4flgha9ga0rqN0YGkEjglLNMUFN73BBmb4+QdV1BTUhaoqV0uW0HhfUJM96sFxQvUlQ21JI0HEqvCwXtOStb+YEZU9ECUqrLBeUtmCpoDaLM4JOc11eUMfDKwta8tY3mQQ1dY1ymCAo5d4VlPTdKqiNjm9uqqDaad2TyxKCjpoYnnFBWTfZF2YEnQSWcQTNwhpBTf4dQa0IVHOCoNrWwAW1ufcJqucFtSHsJyjfiqWC8rgyCzqK9jYEpReZoCRMdkGHuEaCKr+gpoNCguplgrIJIUVQX5ezohB0M2FBBxG4oNoZ4pw5/SqC8rgocC7oUH92Qblxpvw1BfUaZjcRglLZkaDGPbMwq6Cuba6grjsTQd0QTI+ZCpIF1bwREYJOWC/oKNRJ255ySYgX1NacKqib2D0ENSYxQd3srBCUVRvK86ygLCAI6r4cFbR/MhHU3To2DGQSlJdxZ1/RgupxOTdFM4LGBDebKFBQOsdU6DSThqBOdooLOn2dtiAqqGbJdWTcWdCW/nscl21Xi8wIqmcEZSno/tlXUD0jqD66oL71gxsxLZcEFTQ/hRj6vubC6iavD52lJoLaAmzZVFC7mghBbQBO8+4WixOUUlyhoOaz+CJX1K8U1LupmQRlK/kFZavwjSgrqFvDZNOvKyhfe39BzdVMRa6o9wqqryKoXTlNUGokKqiyAVQgqFOkVkGHH5M9l90HHW3a1QTVVPjwgobXNwWECtofym+7++JSQTXLeD2C6sWCjjaBG2cjG1WwUlDP4hyCuu3HBY09n3t9fcFt1WUUVI8FdR+uE3QcuCxB2Su1Cbq1nBhB9ZUF5SvJEHTCnoJ6a7Urhq0pKWjKrW/WtrtY0Gl1RQSlh2sFdcfi0RaP670BQWdWLylollvf7C8olfQLqq8sqJ+VgjoRe5bdtKB5bn2zQVBdi6B6LKhTLd/iCgWdLpEiaNFb3+QVVI8FZYszCarLCjoOOl3Q2LLbFrTorW9kCGpeHpeEoLGapQha9NY3awX1FrxBQWML05fduKAlb31j+juboDokqH1404L6V7iaoJEYMpdbnoV11VlBI2tUJqiz5jpBp7HPvhqrZl7Q+FvCu0SKoEVvfbOfoJMKlL+7IOh8rUmlM5ezBYve+ua6ggZqg6BarxB0WRwFp/iSt76RL6hnbfMvBC1QeM0IWvQ7SUmCRuPeRVBnjZig0yF4weQIQTO1vr66AoL21YZbzifotDUIurWwNEE1BI2QXdBwRRULaub4IlP8TQjKQ6hc0EXVlii8QtDTm6fzvfmx2LVcQ9BxrYHFatxfEHQdQgRtr7O7tFczFfksPlXQhVULFnTcVAwImlCwPQ/6+Zc/dv+vR7Kgk1UyCJpQRwKFBd2IEEHbT5Lan+SGoKwYBNViBO2uVD69jU/xL+9nDqRuR1D7LwTds1JW8HTfHsnHDuLP5me4g7/HDUFDTcWQLWgR1gg6C7ueJDTOQtBQU8uBoIsKaud6ktEH9/bmjcF2ri5ooD7leXIrgm5q7rosFzThs/jSI2hipONag4shqFxWd3v0mib6Psj6fdD0NZIKQtAtK+zI+m4/3UdKm2E2eKQfFnRRVMlVQ9AtK+zIekHLfO24UkFDbXgu9YSgi1gvaJkbN0DQ5UBQX8Hnx9gUv75d0YIubi3tYnkIGmb9Ufy2G4TGBd2EJEHTtgeChtl2bFygXQhaHgi6oToIWp7bFjTPb3lBUF4cggZZMYIOP6JQ5t5MNydoChA0zHJBX973Zpa6on5DpZEaIChv77rNbWLFFP9Nf9uwkifqN7FcGQgql/UjaJn7g0LQK3Dbgg4/I1voh7wg6BW4cUGL/pAXBL0Cty5o0XYhaHkg6IbqCiVvo6Bl1qXiEDTICkHbOzecBX8Wv7xaCCqXFYI2h++fH+7jFyyvbxeClue2BW2/Edd+mCT2POjyaiGoXNYJemrkLHnB8pWBoHJZM8XfPz+2v9VZZorfAwgql1UHSeruw8v7TX7KylH2YCBoNsSdZtoDCCoXCKohqGQgqIagkoGgGoJKBoJqCCoZCKohqGTWnKin78xt+FaSqBxBULmsGEH7O9Zd1Lv2qpHi7V4DCCqX5YKaU/TnN08bvjcnKkcQVC7rPotvubz6ccP1IqJyBEHlsmYE7Sf2dgSFoFkqhKBhtuyDbvk8XlSOIKhc1pxm6o7j2x9L2nDBnagc7R0MBA2D86B6/2AgaBgIqvcPBoKGWSPo54dmit9234aqclQcCBpm9UFSqbvbHREIGmbTaaZrtHsEIGiYTSfqr9HuEbh2MmpKPkZQAUDQMNgHFQAEDVPkKL6/zOkSu4l9TTkqDgQNU+Q8aCdotwvAfph7fXUgMzUlv5igg5qLf44blKem5K8XNHIU3wr6+eFdrFRNObo5akp+MUExgsqlpuQXErT9xtK9NodLW9oF+akp+UUE1cMNnIYzUrwWIjlCkJ2akl9K0GztgvzUlPySgprPnDa1C/JTU/IXCrrol2QhqFBqSn7JC5YhqFBqSj4EPSA1JR+CHpCako/vJB2QmpIPQQ9ITcmHoAekpuRD0ANSU/Ih6AGpKfkQ9IDUlHwIekBqSj4EPSA1JR+CHpCakg9BD0hNyYegB6Sm5EPQA1JT8iHoAakp+RD0gNSUfAh6QGpKPgQ9IDUlH4IekJqSD0EPSE3Jh6AHpKbkQ9ADUlPyIegBqSn5EPSA1JR8CHpAako+BD0gNSUfggLRQFAgGggKRANBgWggKBANBAWigaBANLsJCkASOwm6SwvZqCjUmmLdFCoEZVQUak2xQtBcVBRqTbFC0FxUFGpNsULQXFQUak2xQtBcVBRqTbFC0FxUFGpNsULQXFQUak2xQtBcVBRqTbEKFxSADUBQIBoICkQDQYFoICgQDQQFooGgQDQQFIgGggLRQFAgGggKRANBgWggKBBNdkFf3iul3raPLkrdfXAefH5Q6j53g+sJh3oZvhv7bt8AGbG0nkVFOhdq/yCZ3IK+vG8COLcaXpoHl6636cGbJ/38KMbQWKgtgkKNxnpuH8gxNBbqqfnn88OiUHML2jd/fvXjy/v2TXS616MHzaLMTa4lEmqHnEhn0nqvbdD7Ewn1+bEzoBmn0imzD9q8XShO++Cvlg3u18Ebarvg88PbfSOb4o1VmqA93lD7yemyaJIvI+jJ6HhhDy6v/vQ47JwIwhvqsGDfyKb4YxU2xff4DegFXRRrEUEvjYb0bqEHZ9Vks3+/y8EfqtbDdCSKUKyXxUcexfGHOgyluwt6MXvII0Hv2PgkhECoeulEdA1CsbZDvbD9kWCo3UHS3oJeuml8OsD3+3YLD+LKEgq1+fe0aFf+CoRidXacZRBO60mpV3/6Zt990HO/m+nZRe4FFXSoFAxV4AwfTqu4AT+S1u71Xy55L2UX1Oxh+E4ytEsETfHhUIUN9DoWax9pJWntlu96msnuDHnOKDeR9cGKIBaqqBFJx2MVtg8aCbX76GNhZnMLeu4/I+x8nHy+dVGSTjNFQxW1TzcT66matD4/7v5RJwBZgaBANBAUiAaCAtFAUCAaCApEA0GBaCAoEA0EBaKBoEA0EBSIBoIC0UBQIBoICkQDQYFoICgQDQQFooGgQDQQFIgGggLRQFAgGggKRANBgWggKBANBAWigaBANBAUiAaCAtFAUCAaCApEA0GBaCAoEA0EBaKBoEA0EBSIBoIC0UBQIBoICkQDQYFoICgQDQQFooGgQDQQFIgGggLRQFAgGggKRANBgWggKBANBAWigaBANBAUiAaCAtFAUCAaCApEA0GBaCAoEA0EBaKBoEA0EBSIBoIC0UBQIBoICkQDQYFo/h9MXsiBMWvmfQAAAABJRU5ErkJggg==" style="display: block; margin: auto;" /></p>
+<p>As a second example, we compare the performance of two of the implemented tests via a Monte Carlo simulation study. Under the null hypothesis (i.e. if there is no shift in the series) the tests should reject in <span class="math inline">\(\alpha \%\)</span> of cases. Here, <span class="math inline">\(\alpha\)</span> is the significance level and we choose <span class="math inline">\(\alpha=0.05\)</span>. Under the alternative (i.e. if there is a shift in the series), the tests should reject in most of the cases (at best: always). When the length of the time series increases, the rejection rates should increase.</p>
+<p>We simulate fractionally integrated White noise time series (with and without breaks) using the <code>fracdiff.sim</code> function from the <code>fracdiff</code> package. To estimate the memory parameter we apply the local Whittle estimator by <span class="citation">Robinson (1995)</span> using the <code>local.W</code> function from the <code>LongMemoryTS</code> package. The setup is very similar to the published paper by <span class="citation">Wenger and Leschinski (2019)</span>. The simulation can be extended by all other change-in-mean tests that are implemented in the <code>memochange</code> package, which is not been done here to save computing time.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2"></a>test_func&lt;-<span class="cf">function</span>(T,d)</span>
+<span id="cb11-3"><a href="#cb11-3"></a>{</span>
+<span id="cb11-4"><a href="#cb11-4"></a>  <span class="co"># Simulate a fractionally integrated (long-memory) time series of </span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>  <span class="co"># length T with memory d that is not subject to a shift.</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a>  tseries     &lt;-<span class="st"> </span>fracdiff<span class="op">::</span><span class="kw">fracdiff.sim</span>(<span class="dt">n=</span>T,<span class="dt">d=</span>d)<span class="op">$</span>series</span>
+<span id="cb11-7"><a href="#cb11-7"></a></span>
+<span id="cb11-8"><a href="#cb11-8"></a>  <span class="co"># Simulate a fractionally integrated (long-memory) time series of </span></span>
+<span id="cb11-9"><a href="#cb11-9"></a>  <span class="co"># length T with memory d that is subject to a shift in the middle of</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a>  <span class="co"># the sample of magnitude 2.  </span></span>
+<span id="cb11-11"><a href="#cb11-11"></a>  changep     &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>,T<span class="op">/</span><span class="dv">2</span>),<span class="kw">rep</span>(<span class="dv">2</span>,T<span class="op">/</span><span class="dv">2</span>))</span>
+<span id="cb11-12"><a href="#cb11-12"></a>  tseries2    &lt;-<span class="st"> </span>tseries<span class="op">+</span>changep</span>
+<span id="cb11-13"><a href="#cb11-13"></a></span>
+<span id="cb11-14"><a href="#cb11-14"></a>  <span class="co"># Estimate the long-memory parameter of both series using the suggested bandwidth. </span></span>
+<span id="cb11-15"><a href="#cb11-15"></a>  d_est       &lt;-<span class="st"> </span>LongMemoryTS<span class="op">::</span><span class="kw">local.W</span>(tseries, <span class="dt">m=</span><span class="kw">floor</span>(<span class="dv">1</span><span class="op">+</span>T<span class="op">^</span><span class="fl">0.65</span>))<span class="op">$</span>d</span>
+<span id="cb11-16"><a href="#cb11-16"></a>  d_est2      &lt;-<span class="st"> </span>LongMemoryTS<span class="op">::</span><span class="kw">local.W</span>(tseries2, <span class="dt">m=</span><span class="kw">floor</span>(<span class="dv">1</span><span class="op">+</span>T<span class="op">^</span><span class="fl">0.65</span>))<span class="op">$</span>d</span>
+<span id="cb11-17"><a href="#cb11-17"></a>  </span>
+<span id="cb11-18"><a href="#cb11-18"></a>  <span class="co"># Apply both functions on both time series. Arguments are chosen according to </span></span>
+<span id="cb11-19"><a href="#cb11-19"></a>  <span class="co"># Wenger, Leschinski (2019) who propose these tests.</span></span>
+<span id="cb11-20"><a href="#cb11-20"></a>  typeAsize   &lt;-<span class="st"> </span><span class="kw">CUSUMfixed</span>(tseries,<span class="dt">d=</span>d_est,<span class="dt">procedure=</span><span class="st">&quot;CUSUMfixedm_typeA&quot;</span>,<span class="dt">bandw=</span><span class="dv">10</span>)</span>
+<span id="cb11-21"><a href="#cb11-21"></a>  typeBsize   &lt;-<span class="st"> </span><span class="kw">CUSUMfixed</span>(tseries,<span class="dt">d=</span>d_est,<span class="dt">procedure=</span><span class="st">&quot;CUSUMfixedm_typeB&quot;</span>,<span class="dt">bandw=</span><span class="dv">10</span>)</span>
+<span id="cb11-22"><a href="#cb11-22"></a>  typeApower  &lt;-<span class="st"> </span><span class="kw">CUSUMfixed</span>(tseries2,<span class="dt">d=</span>d_est2,<span class="dt">procedure=</span><span class="st">&quot;CUSUMfixedm_typeA&quot;</span>,<span class="dt">bandw=</span><span class="dv">10</span>)</span>
+<span id="cb11-23"><a href="#cb11-23"></a>  typeBpower  &lt;-<span class="st"> </span><span class="kw">CUSUMfixed</span>(tseries2,<span class="dt">d=</span>d_est2,<span class="dt">procedure=</span><span class="st">&quot;CUSUMfixedm_typeB&quot;</span>,<span class="dt">bandw=</span><span class="dv">10</span>)</span>
+<span id="cb11-24"><a href="#cb11-24"></a>  </span>
+<span id="cb11-25"><a href="#cb11-25"></a>  <span class="co"># Save if the tests reject at the 5% significance level.</span></span>
+<span id="cb11-26"><a href="#cb11-26"></a>  decAsize    &lt;-<span class="st"> </span>typeAsize[<span class="st">&quot;Teststatistic&quot;</span>] <span class="op">&gt;</span><span class="st"> </span>typeAsize[<span class="st">&quot;95%&quot;</span>]</span>
+<span id="cb11-27"><a href="#cb11-27"></a>  decBsize    &lt;-<span class="st"> </span>typeBsize[<span class="st">&quot;Teststatistic&quot;</span>] <span class="op">&gt;</span><span class="st"> </span>typeBsize[<span class="st">&quot;95%&quot;</span>]</span>
+<span id="cb11-28"><a href="#cb11-28"></a>  decApower   &lt;-<span class="st"> </span>typeApower[<span class="st">&quot;Teststatistic&quot;</span>] <span class="op">&gt;</span><span class="st"> </span>typeApower[<span class="st">&quot;95%&quot;</span>]</span>
+<span id="cb11-29"><a href="#cb11-29"></a>  decBpower   &lt;-<span class="st"> </span>typeBpower[<span class="st">&quot;Teststatistic&quot;</span>] <span class="op">&gt;</span><span class="st"> </span>typeBpower[<span class="st">&quot;95%&quot;</span>]</span>
+<span id="cb11-30"><a href="#cb11-30"></a>  </span>
+<span id="cb11-31"><a href="#cb11-31"></a>  <span class="kw">return</span>(<span class="kw">c</span>(decAsize,decBsize,decApower,decBpower))</span>
+<span id="cb11-32"><a href="#cb11-32"></a>}</span></code></pre></div>
+<p>In the next step the Monte Carlo simulation (<span class="math inline">\(N=500\)</span> replications) is executed. The parameters we use for the simulated fractionally integrated White noise time series are series length <span class="math inline">\(T=[50,100]\)</span> and long-memory parameters <span class="math inline">\(d=[0.1,0.2]\)</span>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">set.seed</span>(<span class="dv">410</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># Parameter setting considered</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a>T_grid              &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">50</span>,<span class="dv">100</span>)</span>
+<span id="cb12-4"><a href="#cb12-4"></a>d_grid              &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.1</span>,<span class="fl">0.2</span>)</span>
+<span id="cb12-5"><a href="#cb12-5"></a>N                   &lt;-<span class="st"> </span><span class="dv">500</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="co"># Generate array to save the results </span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>resultmat           &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="ot">NA</span>, <span class="dt">dim=</span><span class="kw">c</span>(<span class="kw">length</span>(T_grid),<span class="kw">length</span>(d_grid),<span class="dv">4</span>))</span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="kw">dimnames</span>(resultmat) &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">paste</span>(<span class="st">&quot;T=&quot;</span>,T_grid,<span class="dt">sep=</span><span class="st">&quot;&quot;</span>),<span class="kw">paste</span>(<span class="st">&quot;d=&quot;</span>,d_grid,<span class="dt">sep=</span><span class="st">&quot;&quot;</span>),</span>
+<span id="cb12-10"><a href="#cb12-10"></a>                            <span class="kw">paste</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;type-A&quot;</span>,<span class="st">&quot;type-B&quot;</span>),<span class="dv">2</span>),<span class="kw">c</span>(<span class="st">&quot;size&quot;</span>,<span class="st">&quot;size&quot;</span>,<span class="st">&quot;power&quot;</span>,<span class="st">&quot;power&quot;</span>),<span class="dt">sep=</span><span class="st">&quot; &quot;</span>))</span>
+<span id="cb12-11"><a href="#cb12-11"></a></span>
+<span id="cb12-12"><a href="#cb12-12"></a><span class="co"># Monte Carlo simulation</span></span>
+<span id="cb12-13"><a href="#cb12-13"></a><span class="cf">for</span>(TTT <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(T_grid))</span>
+<span id="cb12-14"><a href="#cb12-14"></a>{</span>
+<span id="cb12-15"><a href="#cb12-15"></a>  T &lt;-<span class="st"> </span>T_grid[TTT]</span>
+<span id="cb12-16"><a href="#cb12-16"></a>  <span class="cf">for</span>(ddd <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(d_grid))</span>
+<span id="cb12-17"><a href="#cb12-17"></a>  {</span>
+<span id="cb12-18"><a href="#cb12-18"></a>    d                 &lt;-<span class="st"> </span>d_grid[ddd]</span>
+<span id="cb12-19"><a href="#cb12-19"></a>    result_vec        &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb12-20"><a href="#cb12-20"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N)</span>
+<span id="cb12-21"><a href="#cb12-21"></a>    {</span>
+<span id="cb12-22"><a href="#cb12-22"></a>    result_vec        &lt;-<span class="st"> </span>result_vec<span class="op">+</span><span class="kw">test_func</span>(T,d)</span>
+<span id="cb12-23"><a href="#cb12-23"></a>    }</span>
+<span id="cb12-24"><a href="#cb12-24"></a>  resultmat[TTT,ddd,] &lt;-<span class="st"> </span>result_vec<span class="op">/</span>N</span>
+<span id="cb12-25"><a href="#cb12-25"></a>  }</span>
+<span id="cb12-26"><a href="#cb12-26"></a>}</span>
+<span id="cb12-27"><a href="#cb12-27"></a><span class="co"># Results</span></span>
+<span id="cb12-28"><a href="#cb12-28"></a>resultmat</span>
+<span id="cb12-29"><a href="#cb12-29"></a><span class="co">#&gt; , , type-A size</span></span>
+<span id="cb12-30"><a href="#cb12-30"></a><span class="co">#&gt; </span></span>
+<span id="cb12-31"><a href="#cb12-31"></a><span class="co">#&gt;       d=0.1 d=0.2</span></span>
+<span id="cb12-32"><a href="#cb12-32"></a><span class="co">#&gt; T=50  0.020 0.032</span></span>
+<span id="cb12-33"><a href="#cb12-33"></a><span class="co">#&gt; T=100 0.026 0.046</span></span>
+<span id="cb12-34"><a href="#cb12-34"></a><span class="co">#&gt; </span></span>
+<span id="cb12-35"><a href="#cb12-35"></a><span class="co">#&gt; , , type-B size</span></span>
+<span id="cb12-36"><a href="#cb12-36"></a><span class="co">#&gt; </span></span>
+<span id="cb12-37"><a href="#cb12-37"></a><span class="co">#&gt;       d=0.1 d=0.2</span></span>
+<span id="cb12-38"><a href="#cb12-38"></a><span class="co">#&gt; T=50  0.016 0.028</span></span>
+<span id="cb12-39"><a href="#cb12-39"></a><span class="co">#&gt; T=100 0.036 0.046</span></span>
+<span id="cb12-40"><a href="#cb12-40"></a><span class="co">#&gt; </span></span>
+<span id="cb12-41"><a href="#cb12-41"></a><span class="co">#&gt; , , type-A power</span></span>
+<span id="cb12-42"><a href="#cb12-42"></a><span class="co">#&gt; </span></span>
+<span id="cb12-43"><a href="#cb12-43"></a><span class="co">#&gt;       d=0.1 d=0.2</span></span>
+<span id="cb12-44"><a href="#cb12-44"></a><span class="co">#&gt; T=50   0.86 0.824</span></span>
+<span id="cb12-45"><a href="#cb12-45"></a><span class="co">#&gt; T=100  1.00 0.960</span></span>
+<span id="cb12-46"><a href="#cb12-46"></a><span class="co">#&gt; </span></span>
+<span id="cb12-47"><a href="#cb12-47"></a><span class="co">#&gt; , , type-B power</span></span>
+<span id="cb12-48"><a href="#cb12-48"></a><span class="co">#&gt; </span></span>
+<span id="cb12-49"><a href="#cb12-49"></a><span class="co">#&gt;       d=0.1 d=0.2</span></span>
+<span id="cb12-50"><a href="#cb12-50"></a><span class="co">#&gt; T=50  0.830 0.770</span></span>
+<span id="cb12-51"><a href="#cb12-51"></a><span class="co">#&gt; T=100 0.998 0.938</span></span></code></pre></div>
+<p>We observe that both tests do not exceed <span class="math inline">\(\alpha=5\%\)</span> rejections when no break occured in the long-memory time series (first two tables). Furthermore, the type-A test rejects more often than the type-B test the null hypothesis when a shift occured. Therefore, this small Monte Carlo simulation leads to the same conclusion as the paper of <span class="citation">Wenger and Leschinski (2019)</span>, i.e. that the type-A test outperforms the type-B test for fractionally integrated White noise time series when the break is in the middle of the series.</p>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-andrews1993tests">
+<p>Andrews, Donald WK. 1993. “Tests for Parameter Instability and Structural Change with Unknown Change Point.” <em>Econometrica</em>, 821–56. <a href="https://doi.org/10.2307/2951764">https://doi.org/10.2307/2951764</a>.</p>
+</div>
+<div id="ref-bauer1972constructing">
+<p>Bauer, David F. 1972. “Constructing Confidence Sets Using Rank Statistics.” <em>Journal of the American Statistical Association</em> 67 (339): 687–90. <a href="https://doi.org/10.1080/01621459.1972.10481279">https://doi.org/10.1080/01621459.1972.10481279</a>.</p>
+</div>
+<div id="ref-betken2016testing">
+<p>Betken, Annika. 2016. “Testing for Change-Points in Long-Range Dependent Time Series by Means of a Self-Normalized Wilcoxon Test.” <em>Journal of Time Series Analysis</em> 37 (6): 785–809. <a href="https://doi.org/10.1111/jtsa.12187">https://doi.org/10.1111/jtsa.12187</a>.</p>
+</div>
+<div id="ref-brown1975techniques">
+<p>Brown, Robert L, James Durbin, and James M Evans. 1975. “Techniques for Testing the Constancy of Regression Relationships over Time.” <em>Journal of the Royal Statistical Society. Series B (Methodological)</em>, 149–92. <a href="https://doi.org/10.1111/j.2517-6161.1975.tb01532.x">https://doi.org/10.1111/j.2517-6161.1975.tb01532.x</a>.</p>
+</div>
+<div id="ref-dehling2013non">
+<p>Dehling, Herold, Aeneas Rooch, and Murad S Taqqu. 2013. “Non-Parametric Change-Point Tests for Long-Range Dependent Data.” <em>Scandinavian Journal of Statistics</em> 40 (1): 153–73. <a href="https://doi.org/10.1111/j.1467-9469.2012.00799.x">https://doi.org/10.1111/j.1467-9469.2012.00799.x</a>.</p>
+</div>
+<div id="ref-horvath1997effect">
+<p>Horváth, Lajos, and Piotr Kokoszka. 1997. “The Effect of Long-Range Dependence on Change-Point Estimators.” <em>Journal of Statistical Planning and Inference</em> 64 (1): 57–81. <a href="https://doi.org/10.1016/s0378-3758(96)00208-x">https://doi.org/10.1016/s0378-3758(96)00208-x</a>.</p>
+</div>
+<div id="ref-hualde2017fixed">
+<p>Hualde, Javier, and Fabrizio Iacone. 2017. “Fixed Bandwidth Asymptotics for the Studentized Mean of Fractionally Integrated Processes.” <em>Economics Letters</em> 150: 39–43. <a href="https://doi.org/10.1016/j.econlet.2016.10.014">https://doi.org/10.1016/j.econlet.2016.10.014</a>.</p>
+</div>
+<div id="ref-iacone2014fixed">
+<p>Iacone, Fabrizio, Stephen Leybourne, and Robert AM Taylor. 2014. “A Fixed-B Test for a Break in Level at an Unknown Time Under Fractional Integration.” <em>Journal of Time Series Analysis</em> 35 (1): 40–54. <a href="https://doi.org/10.1111/jtsa.12049">https://doi.org/10.1111/jtsa.12049</a>.</p>
+</div>
+<div id="ref-kiefer2005new">
+<p>Kiefer, Nicholas M, and Timothy J Vogelsang. 2005. “A New Asymptotic Theory for Heteroskedasticity-Autocorrelation Robust Tests.” <em>Econometric Theory</em>, 1130–64. <a href="https://doi.org/10.1017/s0266466605050565">https://doi.org/10.1017/s0266466605050565</a>.</p>
+</div>
+<div id="ref-kramer2000testing">
+<p>Krämer, Walter, and Philipp Sibbertsen. 2002. “Testing for Structural Changes in the Presence of Long Memory.” <em>International Journal of Business and Economics</em> 1 (3): 235–42. <a href="http://hdl.handle.net/10419/77279">http://hdl.handle.net/10419/77279</a>.</p>
+</div>
+<div id="ref-robinson1995gaussian">
+<p>Robinson, Peter M. 1995. “Gaussian Semiparametric Estimation of Long Range Dependence.” <em>The Annals of Statistics</em> 23 (5): 1630–61. <a href="https://doi.org/10.1214/aos/1176324317">https://doi.org/10.1214/aos/1176324317</a>.</p>
+</div>
+<div id="ref-robinson2005robust">
+<p>———. 2005. “Robust Covariance Matrix Estimation: HAC Estimates with Long Memory/Antipersistence Correction.” <em>Econometric Theory</em> 21 (01): 171–80. <a href="https://doi.org/10.1017/S0266466605050115">https://doi.org/10.1017/S0266466605050115</a>.</p>
+</div>
+<div id="ref-shao2010self">
+<p>Shao, Xiaofeng. 2010. “A Self-Normalized Approach to Confidence Interval Construction in Time Series.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 72 (3): 343–66. <a href="https://doi.org/10.1111/j.1467-9868.2009.00737.x">https://doi.org/10.1111/j.1467-9868.2009.00737.x</a>.</p>
+</div>
+<div id="ref-shao2011simple">
+<p>———. 2011. “A Simple Test of Changes in Mean in the Possible Presence of Long-Range Dependence.” <em>Journal of Time Series Analysis</em> 32 (6): 598–606. <a href="https://doi.org/10.1111/j.1467-9892.2010.00717.x">https://doi.org/10.1111/j.1467-9892.2010.00717.x</a>.</p>
+</div>
+<div id="ref-wang2008change">
+<p>Wang, Lihong. 2008. “Change-in-Mean Problem for Long Memory Time Series Models with Applications.” <em>Journal of Statistical Computation and Simulation</em> 78 (7): 653–68. <a href="https://doi.org/10.1080/00949650701216604">https://doi.org/10.1080/00949650701216604</a>.</p>
+</div>
+<div id="ref-wenger2019fixed">
+<p>Wenger, Kai, and Christian Leschinski. 2019. “Fixed-Bandwidth Cusum Tests Under Long Memory.” <em>Econometrics and Statistics</em>. <a href="https://doi.org/10.1016/j.ecosta.2019.08.001">https://doi.org/10.1016/j.ecosta.2019.08.001</a>.</p>
+</div>
+<div id="ref-wenger2018simple">
+<p>Wenger, Kai, Christian Leschinski, and Philipp Sibbertsen. 2018. “A Simple Test on Structural Change in Long-Memory Time Series.” <em>Economics Letters</em> 163: 90–94. <a href="https://doi.org/10.1016/j.econlet.2017.12.007">https://doi.org/10.1016/j.econlet.2017.12.007</a>.</p>
+</div>
+<div id="ref-wenger2019change">
+<p>———. 2019. “Change-in-Mean Tests in Long-Memory Time Series: A Review of Recent Developments.” <em>AStA Advances in Statistical Analysis</em> 103 (2): 237–56. <a href="https://doi.org/10.1007/s10182-018-0328-5">https://doi.org/10.1007/s10182-018-0328-5</a>.</p>
+</div>
+<div id="ref-wright1998testing">
+<p>Wright, Jonathan H. 1998. “Testing for a Structural Break at Unknown Date with Long-Memory Disturbances.” <em>Journal of Time Series Analysis</em> 19 (3): 369–76. <a href="https://doi.org/10.1111/1467-9892.00097">https://doi.org/10.1111/1467-9892.00097</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

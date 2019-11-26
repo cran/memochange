@@ -6,9 +6,15 @@
 \alias{memochange-package}
 \title{memochange: Testing for Structural Breaks under Long Memory and Testing for Changes in Persistence}
 \description{
-The memochange package is a collection of test procedures
-and break point estimators for persistent processes
-that exhibit structural breaks in mean or in persistence.
+Test procedures and break point estimators for persistent processes that exhibit structural breaks in mean or in persistence.\cr \cr 
+On the one hand, the package contains the most popular approaches for testing whether a time series exhibits a break in persistence from I(0) to I(1) or vice versa, such as those of Busetti and Taylor (2004) and Leybourne, Kim, and Taylor (2007).
+The approach by Martins and Rodrigues (2014), which allows to detect changes from I(d1) to I(d2) with d1 and d2 being non-integers, is included as well.\cr
+In case the tests reject the null of constant persistence, various breakpoint estimators are available to detect the point of the break as well as the order of integration in the two regimes.\cr \cr
+On the other hand, the package contains the most popular approaches to test for a change in mean in a long-memory time series, which were recently reviewed by Wenger, Leschinski, and Sibbertsen (2018). 
+These include memory robust versions of the CUSUM, sup-Wald, and Wilcoxon type tests. The tests either utilize consistent estimates of the long-run variance or a self normalization approach in their test statistics.
+}
+\details{
+For details see the readme and vignettes in the corresponding GitHub repository (https://github.com/KaiWenger/memochange).
 }
 \references{
 Andrews, D. W. K. (1993): Tests for Parameter Instability and Structural Change With Unknown Change Point. Econometrica, 61, pp. 821-856.
@@ -31,7 +37,7 @@ Leybourne, S., Kim, T., Smith, V., and Newbold, P. (2003): Tests for a change in
 
 Leybourne, S. and Taylor, R. (2004): On tests for changes in persistence. Economics letters, 84, pp. 107-115.
 
-Leybourne, S., Kim, T., and Taylor, R. (2006): Cusum of squares-based tests for a change in persistence. Journal of Time Series Analysis, 28, pp. 408-433.
+Leybourne, S., Kim, T., and Taylor, R. (2007): Cusum of squares-based tests for a change in persistence. Journal of Time Series Analysis, 28, pp. 408-433.
 
 Martins, L.. and Rodrigues, P. (2014): Testing for persistence change in fractionally integrated models: An application to world inflation rates Cusum of squares-based tests for a change in persistence. Computational Statistics and Data Analysis, 76, pp. 502-522.
 

@@ -2,11 +2,11 @@
 % Please edit documentation in R/LBI_test.R
 \name{LBI}
 \alias{LBI}
-\title{function to calculate sequence of cusum test statistics by Leybourne, Taylor, and Kim (2006). For internal use only}
+\title{function to calculate sequence of LBI test statistics by Busetti and Taylor (2004). For internal use only.}
 \usage{
-LBI(x, trend, m, tau)
+LBI(x, trend, tau)
 }
 \description{
-function to calculate sequence of cusum test statistics by Leybourne, Taylor, and Kim (2006). For internal use only
+function to calculate sequence of LBI test statistics by Busetti and Taylor (2004). For internal use only.
 }
 \keyword{internal}
