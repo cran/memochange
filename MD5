@@ -1,4 +1,4 @@
-832c4ef3bb7c8eb38f5159ffd757bf06 *DESCRIPTION
+3317a1ab796e45d892fd3387a5c995b5 *DESCRIPTION
 6ea2029b8b9f79a556d7199b3f3feca0 *NAMESPACE
 ab21711a748c452aedfa1331118e7074 *R/BP_estim.R
 6bc849ac6ced3d71b470bea2186ef2fd *R/CUSUMLM.R
@@ -18,14 +18,15 @@ f541d160941727ccf6c730fce6163c7a *R/memochange.R
 6dc788eff5c92464f0bf66866b69ba57 *R/snsupwald.R
 c48d7783702b3346f757bc5509c02375 *R/snwilcoxon.R
 84d10ab024de0add71b161a560cc05cc *R/wilcoxonLM.R
-d25a23dfb2d5d458b767348aede9d080 *README.md
+d1f09456a07552a9f6e706a592e23060 *README.md
 763c594dd15ea396d3bb700bd0148a79 *build/vignette.rds
-89e6b32271dd69d8334fddeb906147a7 *inst/doc/Change_in_Mean.R
-384cb05ec82679d46ae39d539ddf2a59 *inst/doc/Change_in_Mean.Rmd
-d7acda1df0a01ce4b228c7589cce47a1 *inst/doc/Change_in_Mean.html
+f978d602bf9f2c0d627cdbca2d519127 *inst/CITATION
+e7a2a96f74baeb1284169242a3c2adca *inst/doc/Change_in_Mean.R
+d46f495dfa711dcfac08e324b2b9f162 *inst/doc/Change_in_Mean.Rmd
+1d4d15d2e98af053619b27e278a6520c *inst/doc/Change_in_Mean.html
 9c972e61b8cb37422c2e3a26e8292ac7 *inst/doc/break_in_persistence.R
 c8e9cb724b528bdeda05cc243f69da0f *inst/doc/break_in_persistence.Rmd
-aed8c55f625294b106fd0ae3918a2864 *inst/doc/break_in_persistence.html
+b217445e37c2bca169410cb435e90611 *inst/doc/break_in_persistence.html
 ef827f795554ee04ef1bc715ce89124d *man/BP_estim.Rd
 e8d0d9e485138fe44920e1c88c8831ca *man/BT.Rd
 8d45deeb7390366a0374d0e680cc7a50 *man/CUSUMLM.Rd
@@ -46,9 +47,9 @@ a5e8d4e47c18de84eccadb9749843aab *man/cusum_test.Rd
 7dd1dfa8c64c968114908426b4f9a1a0 *man/d_vec.Rd
 18922614fe9594089c748ce863d69b1c *man/ers_test.Rd
 e4281bb6c5cade39ad90c7ae70bb2864 *man/fb_longrun.Rd
-e4c0aa7f64ec5bbbdea801982f798fbc *man/figures/README-unnamed-chunk-13-1.png
-6e2c72ed5e07a87a15d45e0e631e63af *man/figures/README-unnamed-chunk-3-1.png
-93ca8b2bcdc199ca34547e3947d7f351 *man/figures/README-unnamed-chunk-9-1.png
+1f20e38a4e225aa3d039e4b1bef92708 *man/figures/README-unnamed-chunk-13-1.png
+927b2629a193f45648035360112c6f50 *man/figures/README-unnamed-chunk-3-1.png
+6d89416a3dfa89facb7c3555de4f1593 *man/figures/README-unnamed-chunk-9-1.png
 ae6e60a48c98526ebde80347d0e69364 *man/fixbsupw.Rd
 56d20bf48e094bda1ee8bf7155647e43 *man/getCV.Rd
 3826275d65d18ca194ae61c7ea17daf2 *man/memochange.Rd
@@ -73,6 +74,6 @@ dc645593b313b258e3b7170a8ea62f70 *tests/testthat/test_pb_sim.R
 5cc59e5bbe138b3a7b78de1f014758a5 *tests/testthat/test_snsupwald.R
 a9873915cf148f058f959611b2ef6b61 *tests/testthat/test_snwilcoxon.R
 1a3287a5d5b0be3fc463586b2888f3b8 *tests/testthat/test_wilcoxonLM.R
-384cb05ec82679d46ae39d539ddf2a59 *vignettes/Change_in_Mean.Rmd
+d46f495dfa711dcfac08e324b2b9f162 *vignettes/Change_in_Mean.Rmd
 c8e9cb724b528bdeda05cc243f69da0f *vignettes/break_in_persistence.Rmd
 516d0ceff8e1e32445220c477cd18aa4 *vignettes/paper.bib
