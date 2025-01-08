@@ -16,7 +16,7 @@ bibentry(bibtype = "Manual",
 
 bibentry(bibtype = "Article",
   title     = "memochange: An R package for estimation procedures and tests for persistent time series",
-  author    = personList(as.person("Kai Wenger"),as.person("Janis Becker")),
+  author  = c(person("Kai", "Wenger"), person("Janis", "Becker")),
   journal   = "Journal of Open Source Software",
   volume    =  4,
   number    =  43,
